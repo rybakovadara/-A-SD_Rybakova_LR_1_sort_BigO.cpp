@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <chrono>
+
+// Функция слияния двух отсортированных списков
+std::vector<int> merge_sorted_lists(const std::vector<int>& list1, const std::vector<int>& list2) {
+    std::vector<int> merged;
+    size_t i = 0, j = 0;
+
+    while (i < list1.size() && j < list2.size()) {
+        if (list1[i] <= list2[j]) {
+            merged.push_back(list1[i]);
+            i++;
+        } else {
+            merged.push_back(list2[j]);
+            j++;
+        }
+    }
+
+    while (i < list1.size()) {
+        merged.push_back(list1[i]);
+        i++;
+    }
+
+    while (j < list2.size()) {
+        merged.push_back(list2[j]);
+        j++;
+    }
+
+    return merged;
+}
+
+int main() {
+    // Тестирование на разных размерах
+    std::vector<std::pair<int, int>> test_sizes = {{100, 200}, {1000, 2000}, {10000, 20000}};
+
+    for (const auto& sizes : test_sizes) {
+        int n1 = sizes.first, n2 = sizes.second;
+        std::vector<int> list1(n1), list2(n2);
+
+        // Заполнение отсортированными данными
+        for (int i = 0; i < n1; i++) list1[i] = i * 2;       // Чётные числа
+        for (int i = 0; i < n2; i++) list2[i] = i * 2 + 1;   // Нечётные числа
+
+        auto start = std::chrono::high_resolution_clock::now();
+        std::vector<int> merged = merge_sorted_lists(list1, list2);
+        auto end = std::chrono::high_resolution_clock::now();
+
+        std::chrono::duration<double> elapsed = end - start;
+        std::cout << "Размеры: " << n1 << " и " << n2 
+                  << " | Время: " << elapsed.count() << " сек | Сложность: O(n)" << std::endl;
+    }
+
+    return 0;
+}
