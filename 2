@@ -1,0 +1,39 @@
+#include <iostream>
+#include <vector>
+#include <chrono>
+
+// Метод 1: Цикл с push_back
+std::vector<int> merge_with_loop(const std::vector<int>& list1, const std::vector<int>& list2) {
+    std::vector<int> result;
+    for (int num : list1) result.push_back(num);
+    for (int num : list2) result.push_back(num);
+    return result;
+}
+
+// Метод 2: Метод insert
+std::vector<int> merge_with_insert(std::vector<int> list1, const std::vector<int>& list2) {
+    list1.insert(list1.end(), list2.begin(), list2.end());
+    return list1;
+}
+
+int main() {
+    std::vector<int> list1(10000, 1), list2(20000, 2); // Большие списки
+
+    // Тестирование цикла с push_back
+    auto start = std::chrono::high_resolution_clock::now();
+    auto result1 = merge_with_loop(list1, list2);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> time_loop = end - start;
+
+    // Тестирование метода insert
+    start = std::chrono::high_resolution_clock::now();
+    auto result2 = merge_with_insert(list1, list2);
+    end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> time_insert = end - start;
+
+    std::cout << "Цикл с push_back: " << time_loop.count() << " сек" << std::endl;
+    std::cout << "Метод insert: " << time_insert.count() << " сек" << std::endl;
+    std::cout << "Отношение (loop/insert): " << time_loop.count() / time_insert.count() << std::endl;
+
+    return 0;
+}
