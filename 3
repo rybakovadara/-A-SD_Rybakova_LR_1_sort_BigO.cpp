@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+#include <chrono>
+#include <algorithm>
+
+// Медленный метод: последовательное добавление и сортировка
+std::vector<int> merge_slow(std::vector<int> list1, const std::vector<int>& list2) {
+    list1.insert(list1.end(), list2.begin(), list2.end());
+    std::sort(list1.begin(), list1.end());
+    return list1;
+}
+
+// Быстрый метод: два указателя
+std::vector<int> merge_fast(const std::vector<int>& list1, const std::vector<int>& list2) {
+    std::vector<int> merged;
+    size_t i = 0, j = 0;
+    while (i < list1.size() && j < list2.size()) {
+        if (list1[i] <= list2[j]) merged.push_back(list1[i++]);
+        else merged.push_back(list2[j++]);
+    }
+    while (i < list1.size()) merged.push_back(list1[i++]);
+    while (j < list2.size()) merged.push_back(list2[j++]);
+    return merged;
+}
+
+int main() {
+    std::vector<int> list1 = {1, 3, 5}, list2 = {2, 4, 6};
+
+    // Тестирование медленного метода
+    auto start = std::chrono::high_resolution_clock::now();
+    auto result_slow = merge_slow(list1, list2);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> time_slow = end - start;
+
+    // Тестирование быстрого метода
+    start = std::chrono::high_resolution_clock::now();
+    auto result_fast = merge_fast(list1, list2);
+    end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> time_fast = end - start;
+
+    std::cout << "Медленный метод: " << time_slow.count() << " сек" << std::endl;
+    std::cout << "Быстрый метод: " << time_fast.count() << " сек" << std::endl;
+    std::cout << "Ускорение: " << time_slow.count() / time_fast.count() << "x" << std::endl;
+
+    return 0;
+}
